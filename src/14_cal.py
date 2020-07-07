@@ -18,15 +18,55 @@ and does the following:
    the format that your program expects arguments to be given.
    Then exit the program.
 
-Note: the user should provide argument input (in the initial call to run the file) and not 
-prompted input. Also, the brackets around year are to denote that the argument is
-optional, as this is a common convention in documentation.
+Note: the user should provide argument input
+(in the initial call to run the file) and not
+prompted input. Also, the brackets around year are to
+denote that the argument is optional, as this is a common convention in
+documentation.
 
-This would mean that from the command line you would call `python3 14_cal.py 4 2015` to 
-print out a calendar for April in 2015, but if you omit either the year or both values, 
+This would mean that from the command line you would call `python3 14_cal.py 4 2015` to
+print out a calendar for April in 2015, but if you omit either the year or both values,
 it should use today’s date to get the month and year.
 """
 
 import sys
 import calendar
 from datetime import datetime
+
+if __name__ == "__main__":
+
+    CURRENT_DATE = datetime.today()
+    MONTH_INTS = [x for x in range(1, 13)]
+    args = sys.argv[1:]
+
+    print(args)
+    # Instantiate the calendar class
+    cal = calendar.TextCalendar()
+
+    # Set a year and month variable
+    # These will be our defaults
+    year = CURRENT_DATE.year
+    month = CURRENT_DATE.month
+
+
+    # package integer arguments into a separate list
+    date_params = [int(x) for x in args]
+
+    if len(date_params) == 0:
+        # No Arguments are supplied.
+        cal.prmonth(year, month)
+    elif len(date_params) == 1 and date_params[0] in MONTH_INTS:
+        # Only the month is supplied
+        cal.prmonth(year, date_params[0])
+    elif len(date_params) == 2 and len(str(date_params[1])) == 4: # O(log(n))
+        # The month and year are supplied.
+        cal.prmonth(date_params[1], date_params[0])
+    else:
+        # Correct arguments not supplied.
+        print(
+            """
+            Arguments not understood. Expected one of [None], [Month],
+            or [Month] and [Year]. If only 1 arugment is passed, it must be a
+            month!
+            """
+        )
